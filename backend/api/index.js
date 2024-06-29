@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 
 //routes
 import userRoute from "./routes/user.route.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(cookieParser());
 //connect db
 connectDatabase();
 

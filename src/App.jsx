@@ -6,6 +6,10 @@ import SignUp from "./pages/SignUp";
 import About from "./pages/About";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import PrivateRoute from "./components/PrivateRoute";
+import OurProduct from "./pages/OurProduct";
+import OmsMembership from "./pages/OmsMembership";
+import Service from "./pages/Service";
 function App() {
   return (
     <BrowserRouter>
@@ -15,7 +19,12 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/oms-plan" element={<OmsMembership />} />
+        <Route path="/service" element={<Service />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/our-product" element={<OurProduct />} />
+        </Route>
       </Routes>
       <Footer />
     </BrowserRouter>
