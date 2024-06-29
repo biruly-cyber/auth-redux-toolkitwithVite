@@ -6,7 +6,8 @@ import {
   signInSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import OAuth from "../components/OAuth";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-  const { loading, error } = useSelector((state) => state.user);
+  // const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -49,11 +50,11 @@ const SignIn = () => {
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-bold mb-6">Sign In</h2>
-        {error && (
+        {/* {error && (
           <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
             {error}
           </div>
-        )}
+        )} */}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
@@ -94,8 +95,9 @@ const SignIn = () => {
               type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-              {loading ? <span>Please Wait</span> : <span> Sign In</span>}
+              <span> Sign In</span>
             </button>
+            <OAuth />
           </div>
           <p>
             Don&apos;t have an account?{" "}

@@ -60,3 +60,54 @@ export const signUp = async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+
+export const google = async (req, res, next) => {
+  const { name, email, photo } = req.body;
+
+  try {
+    let user = await User.findOne({ email: email });
+
+    if (user) {
+      const token = jwt.sign(
+        { email: user.email, id: user._id },
+        "dfahdirieirhfdajf", // Consider using environment variables for secrets
+        { expiresIn: "1h" }
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Logged in successfully!",
+        user,
+        token,
+      });
+    } else {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+
+      const hashedPassword = await bcrypt.hash(generatedPassword, 12);
+
+      user = await User.create({
+        username: name.split(" ").join("").toLowerCase(),
+        email,
+        profilePicture: photo,
+        password: hashedPassword,
+      });
+
+      const token = jwt.sign(
+        { email: user.email, id: user._id },
+        "dfahdirieirhfdajf", // Consider using environment variables for secrets
+        { expiresIn: "1h" }
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Login successfully",
+        user,
+        token,
+      });
+    }
+  } catch (error) {
+    next(errorHandler(500, "Something went wrong"));
+  }
+};
