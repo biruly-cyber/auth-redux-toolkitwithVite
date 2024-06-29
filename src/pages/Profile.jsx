@@ -5,15 +5,27 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { app } from "../firebase";
+import axios from "axios";
+import {
+  updateUserFailure,
+  updateUserStart,
+  updateUserSuccess,
+} from "../redux/user/userSlice";
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const fileRef = useRef();
-  const [image, setImage] = useState(undefined);
+  const [image, setImage] = useState(null);
   const [imagePercentage, setImagePercentage] = useState(0);
   const [imageUploadError, setImageUploadError] = useState(false);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    profilePicture: "",
+  });
 
   const { currentUser } = useSelector((state) => state.user);
 
@@ -54,6 +66,29 @@ const Profile = () => {
     }
   };
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  //handle on submit
+  const handleOnSubmit = async () => {
+    console.log(formData);
+    try {
+      dispatch(updateUserStart());
+      const response = await axios.post(
+        `/api/v1/auth/update/${currentUser._id}`,
+        {
+          body: formData,
+        }
+      );
+      const { user } = response.data;
+      dispatch(updateUserSuccess(user));
+    } catch (error) {
+      console.log(error);
+      dispatch(updateUserFailure(error));
+    }
+  };
+
   if (!currentUser) {
     return <div>Please log in to view your profile.</div>;
   }
@@ -61,7 +96,7 @@ const Profile = () => {
   return (
     <div className="container mx-auto p-4 h-screen">
       <div className="bg-white shadow-md rounded-lg p-6">
-        <div className="flex items-center space-x-4 ">
+        <div className="flex items-center space-x-4">
           <input
             type="file"
             ref={fileRef}
@@ -92,9 +127,34 @@ const Profile = () => {
             )}
           </p>
           <div>
-            <h2 className="text-2xl font-bold">{currentUser.username}</h2>
-            <p className="text-gray-600">{currentUser.email}</p>
+            <input
+              id="username"
+              type="text"
+              className="text-2xl font-bold"
+              value={currentUser.username}
+              onChange={handleChange}
+            />
+            <input
+              id="email"
+              type="email"
+              className="text-gray-600"
+              value={currentUser.email}
+              onChange={handleChange}
+            />
+            <input
+              id="password"
+              type="password"
+              className="text-gray-600"
+              value={formData.password}
+              onChange={handleChange}
+            />
           </div>
+          <button
+            className="bg-green-500 px-4 py-1 text-white rounded-full"
+            onClick={handleOnSubmit}
+          >
+            Update
+          </button>
         </div>
         <div className="mt-6">
           <h3 className="text-xl font-semibold">About Me</h3>
@@ -109,6 +169,10 @@ const Profile = () => {
             <li>Manage Subscriptions</li>
             <li>Privacy Settings</li>
           </ul>
+          <button className="bg-green-500 px-4 py-1 text-white rounded-full">
+            Update
+          </button>
+
           <button className="bg-red-500 px-4 py-1 text-white rounded-full">
             Logout
           </button>

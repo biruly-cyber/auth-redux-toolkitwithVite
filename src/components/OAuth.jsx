@@ -3,10 +3,11 @@ import { app } from "../../src/firebase";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { signInSuccess } from "../redux/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const OAuth = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   //handle for gmail sign in
   const handleOnOAuth = async () => {
     try {
@@ -22,6 +23,7 @@ const OAuth = () => {
 
       const { user } = response.data;
       dispatch(signInSuccess(user));
+      navigate("/home");
     } catch (error) {
       console.log(error);
     }
