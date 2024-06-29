@@ -5,10 +5,12 @@ const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
 
   return (
-    <header className="bg-blue-600 text-white p-4">
-      <nav className="container mx-auto flex justify-between items-center">
-        <div className="text-lg font-bold">MyApp</div>
-        <div className="space-x-4 flex">
+    <header className="w-full text-blue-700 p-7 absolute top-0 bg-transparent z-50">
+      <nav className="container mx-auto flex justify-between items-center px-12">
+        <div className="text-xl font-bold cursor-pointer ">
+          Blurock Innovations
+        </div>
+        <div className="space-x-12 flex text-md font-semibold">
           <NavLink
             to="/"
             exact
@@ -17,6 +19,23 @@ const Header = () => {
           >
             Home
           </NavLink>
+          {currentUser && (
+            <NavLink
+              to="/our-product"
+              className="hover:underline"
+              activeClassName="underline"
+            >
+              Our Product
+            </NavLink>
+          )}
+          <NavLink
+            to="/service"
+            className="hover:underline"
+            activeClassName="underline"
+          >
+            Services
+          </NavLink>
+
           <NavLink
             to="/about"
             className="hover:underline"
