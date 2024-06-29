@@ -70,9 +70,7 @@ const Profile = () => {
             onChange={(e) => setImage(e.target.files[0])}
           />
           <img
-            src={
-              currentUser.profilePicture || "https://via.placeholder.com/150"
-            }
+            src={formData.profilePicture || currentUser.profilePicture}
             alt="Profile"
             className="w-24 h-24 rounded-full cursor-pointer"
             onClick={() => fileRef.current.click()}
